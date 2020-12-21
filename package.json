@@ -20,7 +20,11 @@
   "eslintConfig": {
     "extends": [
       "wesbos"
-    ]
+    ],
+    "rules": {
+      "react/static-property-placement": 1,
+      "react/prop-types": 1
+    }
   },
   "browserslist": {
     "production": [
