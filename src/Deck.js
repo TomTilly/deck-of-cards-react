@@ -56,13 +56,15 @@ class Deck extends Component {
         &nbsp;Please try again in a minute.
       </p>
     );
+    const drawCardHtml = (
+      <button className="Deck-drawBtn" type="button">
+        Draw a card
+      </button>
+    );
     return (
       <section className="Deck">
         <h1>Dealer</h1>
-        {hasError && errorHtml}
-        <button className="Deck-drawBtn" type="button">
-          Draw a card
-        </button>
+        {hasError ? errorHtml : drawCardHtml}
         <Card src="" desc="desc" />
         {isDeckEmpty && generateNewDeckHtml}
       </section>
