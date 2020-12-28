@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Card from './Card';
+import './Deck.css';
 
 function checkStatusAndParse(response) {
   if (!response.ok)
@@ -8,6 +9,17 @@ function checkStatusAndParse(response) {
     );
 
   return response.json();
+}
+
+function generateRandomCardStyle() {
+  const rand = Math.random();
+  const sign = rand > 0.5 ? '-' : '';
+  const translateXVal = `-${50 + rand * 10}%`;
+  const translateYVal = `${sign}${rand * 6}px`;
+  const rotateVal = `${sign}${rand * 40}deg`;
+  return {
+    transform: `translate(${translateXVal}, ${translateYVal}) rotate(${rotateVal})`,
+  };
 }
 
 class Deck extends Component {
@@ -49,8 +61,9 @@ class Deck extends Component {
       .then(checkStatusAndParse)
       .then((data) => {
         console.log(data);
+        const newCard = { ...data.cards[0], styles: generateRandomCardStyle() };
         this.setState((st) => ({
-          drawnCards: [...st.drawnCards, data.cards[0]],
+          drawnCards: [...st.drawnCards, newCard],
           isDeckEmpty: !data.remaining,
         }));
       })
@@ -64,8 +77,8 @@ class Deck extends Component {
     const { isDeckEmpty, hasError, drawnCards } = this.state;
     const generateNewDeckHtml = (
       <div>
-        <p>Deck is empty!</p>
-        <button className="Deck-newDeckBtn" type="button">
+        <p>No more cards!</p>
+        <button className="Deck-btn" type="button">
           Get a new deck!
         </button>
       </div>
@@ -81,7 +94,7 @@ class Deck extends Component {
     );
     const drawCardHtml = (
       <button
-        className="Deck-drawBtn"
+        className="Deck-btn"
         type="button"
         onClick={this.drawCard}
         disabled={isDeckEmpty}
@@ -89,14 +102,22 @@ class Deck extends Component {
         Draw a card
       </button>
     );
+    const cardsHtml = drawnCards.map((card) => {
+      const desc = `${card.value} of ${card.suit}`;
+      return (
+        <Card
+          imgSrc={card.images.png}
+          desc={desc}
+          key={desc}
+          styleObj={card.styles}
+        />
+      );
+    });
     return (
       <section className="Deck">
-        <h1>Dealer</h1>
+        <h1 className="Deck-title">Dealer</h1>
         {!hasError ? drawCardHtml : errorHtml}
-        {drawnCards.map((card) => {
-          const desc = `${card.value} of ${card.suit}`;
-          return <Card imgSrc={card.images.png} desc={desc} key={desc} />;
-        })}
+        <div className="Deck-cards">{cardsHtml}</div>
         {isDeckEmpty && generateNewDeckHtml}
       </section>
     );

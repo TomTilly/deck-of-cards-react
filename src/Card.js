@@ -3,8 +3,8 @@ import './Card.css';
 
 class Card extends Component {
   render() {
-    const { imgSrc, desc } = this.props;
-    return <img className="Card" src={imgSrc} alt={desc} />;
+    const { imgSrc, desc, styleObj } = this.props;
+    return <img className="Card" src={imgSrc} alt={desc} style={styleObj} />;
   }
 }
 
