@@ -88,7 +88,7 @@ class Deck extends Component {
         {!hasError ? drawCardHtml : errorHtml}
         {drawnCards.map((card) => (
           <Card
-            imgSrc={card.images.svg}
+            imgSrc={card.images.png}
             desc={`${card.value} of ${card.suit}`}
           />
         ))}
