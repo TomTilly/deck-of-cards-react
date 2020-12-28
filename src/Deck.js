@@ -8,16 +8,28 @@ class Deck extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isDeckEmpty: false,
+    };
   }
 
   componentDidMount() {}
 
   render() {
+    const generateNewDeckHtml = (
+      <button className="Deck-newDeckBtn" type="button">
+        Get a new deck!
+      </button>
+    );
+    const { isDeckEmpty } = this.state;
     return (
       <section className="Deck">
         <h1>Dealer</h1>
+        <button className="Deck-drawBtn" type="button">
+          Draw a card
+        </button>
         <Card src="" desc="desc" />
+        {isDeckEmpty && generateNewDeckHtml}
       </section>
     );
   }
