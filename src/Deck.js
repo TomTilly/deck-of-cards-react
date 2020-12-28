@@ -4,7 +4,7 @@ import Card from './Card';
 function checkStatusAndParse(response) {
   if (!response.ok)
     throw new Error(
-      `Error fetching resource. Response Status Code: ${response.status}`
+      `Error fetching resource. Response Status Code: ${response.status}, Response: ${response}`
     );
 
   return response.json();
@@ -41,6 +41,8 @@ class Deck extends Component {
   }
 
   drawCard(e) {
+    const { isDeckEmpty } = this.state;
+    if (isDeckEmpty) return;
     const { deckID } = this.state;
     const drawCardUrl = `https://deckofcardsapi.com/api/deck/${deckID}/draw/`;
     fetch(drawCardUrl)
@@ -78,7 +80,12 @@ class Deck extends Component {
       </p>
     );
     const drawCardHtml = (
-      <button className="Deck-drawBtn" type="button" onClick={this.drawCard}>
+      <button
+        className="Deck-drawBtn"
+        type="button"
+        onClick={this.drawCard}
+        disabled={isDeckEmpty}
+      >
         Draw a card
       </button>
     );
@@ -86,12 +93,10 @@ class Deck extends Component {
       <section className="Deck">
         <h1>Dealer</h1>
         {!hasError ? drawCardHtml : errorHtml}
-        {drawnCards.map((card) => (
-          <Card
-            imgSrc={card.images.png}
-            desc={`${card.value} of ${card.suit}`}
-          />
-        ))}
+        {drawnCards.map((card) => {
+          const desc = `${card.value} of ${card.suit}`;
+          return <Card imgSrc={card.images.png} desc={desc} key={desc} />;
+        })}
         {isDeckEmpty && generateNewDeckHtml}
       </section>
     );
