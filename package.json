@@ -23,7 +23,8 @@
     ],
     "rules": {
       "react/static-property-placement": 1,
-      "react/prop-types": 1
+      "react/prop-types": 1,
+      "react/no-unused-state": 1
     }
   },
   "browserslist": {
