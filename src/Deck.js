@@ -22,18 +22,34 @@ class Deck extends Component {
       hasError: false,
       deckID: '',
     };
+    this.drawCard = this.drawCard.bind(this);
   }
 
   componentDidMount() {
     const { newDeckUrl } = this.props;
     fetch(newDeckUrl)
       .then(checkStatusAndParse)
-      .then(({ deck_id: deckID }) => {
-        this.setState({ deckID });
+      .then((data) => {
+        console.log(data);
+        this.setState({ deckID: data.deck_id });
       })
       .catch((err) => {
         this.setState({ hasError: true });
-        console.log(err);
+        console.error(err);
+      });
+  }
+
+  drawCard(e) {
+    const { deckID } = this.state;
+    const drawCardUrl = `https://deckofcardsapi.com/api/deck/${deckID}/draw/`;
+    fetch(drawCardUrl)
+      .then(checkStatusAndParse)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        this.setState({ hasError: true });
+        console.error(err);
       });
   }
 
@@ -57,14 +73,14 @@ class Deck extends Component {
       </p>
     );
     const drawCardHtml = (
-      <button className="Deck-drawBtn" type="button">
+      <button className="Deck-drawBtn" type="button" onClick={this.drawCard}>
         Draw a card
       </button>
     );
     return (
       <section className="Deck">
         <h1>Dealer</h1>
-        {hasError ? errorHtml : drawCardHtml}
+        {!hasError ? drawCardHtml : errorHtml}
         <Card src="" desc="desc" />
         {isDeckEmpty && generateNewDeckHtml}
       </section>
