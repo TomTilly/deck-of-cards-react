@@ -21,6 +21,7 @@ class Deck extends Component {
       isDeckEmpty: false,
       hasError: false,
       deckID: '',
+      drawnCards: [],
     };
     this.drawCard = this.drawCard.bind(this);
   }
@@ -46,6 +47,10 @@ class Deck extends Component {
       .then(checkStatusAndParse)
       .then((data) => {
         console.log(data);
+        this.setState((st) => ({
+          drawnCards: [...st.drawnCards, data.cards[0]],
+          isDeckEmpty: !data.remaining,
+        }));
       })
       .catch((err) => {
         this.setState({ hasError: true });
@@ -54,7 +59,7 @@ class Deck extends Component {
   }
 
   render() {
-    const { isDeckEmpty, hasError } = this.state;
+    const { isDeckEmpty, hasError, drawnCards } = this.state;
     const generateNewDeckHtml = (
       <div>
         <p>Deck is empty!</p>
@@ -81,7 +86,12 @@ class Deck extends Component {
       <section className="Deck">
         <h1>Dealer</h1>
         {!hasError ? drawCardHtml : errorHtml}
-        <Card src="" desc="desc" />
+        {drawnCards.map((card) => (
+          <Card
+            imgSrc={card.images.svg}
+            desc={`${card.value} of ${card.suit}`}
+          />
+        ))}
         {isDeckEmpty && generateNewDeckHtml}
       </section>
     );
