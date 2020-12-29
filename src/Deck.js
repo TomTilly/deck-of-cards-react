@@ -6,17 +6,6 @@ import { checkStatusAndParse } from './util';
 const API_BASE_URL = 'https://deckofcardsapi.com/api/deck';
 
 class Deck extends Component {
-  static generateRandomCardStyle() {
-    const rand = Math.random();
-    const sign = rand > 0.5 ? '-' : '';
-    const translateXVal = `-${50 + rand * 10}%`;
-    const translateYVal = `${sign}${rand * 6}px`;
-    const rotateVal = `${sign}${rand * 40}deg`;
-    return {
-      transform: `translate(${translateXVal}, ${translateYVal}) rotate(${rotateVal})`,
-    };
-  }
-
   static fetchNewDeck() {
     return fetch(`${API_BASE_URL}/new/shuffle/`).then(checkStatusAndParse);
   }
@@ -71,12 +60,8 @@ class Deck extends Component {
       .then(checkStatusAndParse)
       .then((data) => {
         console.log(data);
-        const newCard = {
-          ...data.cards[0],
-          styles: Deck.generateRandomCardStyle(),
-        };
         this.setState((st) => ({
-          drawnCards: [...st.drawnCards, newCard],
+          drawnCards: [...st.drawnCards, data.cards[0]],
           isDeckEmpty: !data.remaining,
         }));
       })
@@ -121,14 +106,7 @@ class Deck extends Component {
     );
     const cardsHtml = drawnCards.map((card) => {
       const desc = `${card.value} of ${card.suit}`;
-      return (
-        <Card
-          imgSrc={card.images.png}
-          desc={desc}
-          key={desc}
-          styleObj={card.styles}
-        />
-      );
+      return <Card imgSrc={card.images.png} desc={desc} key={desc} />;
     });
     return (
       <section className="Deck">
