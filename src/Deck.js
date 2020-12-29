@@ -13,18 +13,29 @@ function checkStatusAndParse(response) {
   return response.json();
 }
 
-function generateRandomCardStyle() {
-  const rand = Math.random();
-  const sign = rand > 0.5 ? '-' : '';
-  const translateXVal = `-${50 + rand * 10}%`;
-  const translateYVal = `${sign}${rand * 6}px`;
-  const rotateVal = `${sign}${rand * 40}deg`;
-  return {
-    transform: `translate(${translateXVal}, ${translateYVal}) rotate(${rotateVal})`,
-  };
-}
+// function generateRandomCardStyle() {
+//   const rand = Math.random();
+//   const sign = rand > 0.5 ? '-' : '';
+//   const translateXVal = `-${50 + rand * 10}%`;
+//   const translateYVal = `${sign}${rand * 6}px`;
+//   const rotateVal = `${sign}${rand * 40}deg`;
+//   return {
+//     transform: `translate(${translateXVal}, ${translateYVal}) rotate(${rotateVal})`,
+//   };
+// }
 
 class Deck extends Component {
+  static generateRandomCardStyle() {
+    const rand = Math.random();
+    const sign = rand > 0.5 ? '-' : '';
+    const translateXVal = `-${50 + rand * 10}%`;
+    const translateYVal = `${sign}${rand * 6}px`;
+    const rotateVal = `${sign}${rand * 40}deg`;
+    return {
+      transform: `translate(${translateXVal}, ${translateYVal}) rotate(${rotateVal})`,
+    };
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -69,9 +80,8 @@ class Deck extends Component {
   }
 
   drawCard(e) {
-    const { isDeckEmpty } = this.state;
+    const { isDeckEmpty, deckID: id } = this.state;
     if (isDeckEmpty) return;
-    const { deckID: id } = this.state;
     const drawCardUrl = `${API_BASE_URL}/${id}/draw/`;
     fetch(drawCardUrl)
       .then(checkStatusAndParse)
