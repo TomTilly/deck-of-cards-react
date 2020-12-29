@@ -17,12 +17,16 @@ class Deck extends Component {
     };
   }
 
+  static fetchNewDeck() {
+    return fetch(`${API_BASE_URL}/new/shuffle/`).then(checkStatusAndParse);
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       isDeckEmpty: false,
       hasError: false,
-      deckID: '',
+      deckID: null,
       drawnCards: [],
       deckHasLoaded: false,
     };
@@ -31,8 +35,7 @@ class Deck extends Component {
   }
 
   componentDidMount() {
-    fetch(`${API_BASE_URL}/new/shuffle/`)
-      .then(checkStatusAndParse)
+    Deck.fetchNewDeck()
       .then((data) => {
         console.log(data);
         this.setState({ deckID: data.deck_id, deckHasLoaded: true });
@@ -44,14 +47,14 @@ class Deck extends Component {
   }
 
   generateNewDeck(e) {
-    fetch(`${API_BASE_URL}/new/shuffle/`)
-      .then(checkStatusAndParse)
+    Deck.fetchNewDeck()
       .then((data) => {
         console.log(data);
         this.setState({
           deckID: data.deck_id,
           drawnCards: [],
           isDeckEmpty: false,
+          deckHasLoaded: true,
         });
       })
       .catch((err) => {
