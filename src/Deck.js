@@ -34,6 +34,7 @@ class Deck extends Component {
       hasError: false,
       deckID: '',
       drawnCards: [],
+      deckHasLoaded: false,
     };
     this.drawCard = this.drawCard.bind(this);
     this.generateNewDeck = this.generateNewDeck.bind(this);
@@ -45,7 +46,7 @@ class Deck extends Component {
       .then(checkStatusAndParse)
       .then((data) => {
         console.log(data);
-        this.setState({ deckID: data.deck_id });
+        this.setState({ deckID: data.deck_id, deckHasLoaded: true });
       })
       .catch((err) => {
         this.setState({ hasError: true });
@@ -93,7 +94,7 @@ class Deck extends Component {
   }
 
   render() {
-    const { isDeckEmpty, hasError, drawnCards } = this.state;
+    const { isDeckEmpty, hasError, drawnCards, deckHasLoaded } = this.state;
     const generateNewDeckHtml = (
       <div>
         <p>No more cards!</p>
@@ -120,7 +121,7 @@ class Deck extends Component {
         className="Deck-btn"
         type="button"
         onClick={this.drawCard}
-        disabled={isDeckEmpty}
+        disabled={isDeckEmpty || !deckHasLoaded}
       >
         Draw a card
       </button>
