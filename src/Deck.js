@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Card from './Card';
 import './Deck.css';
 
+const API_BASE_URL = 'https://deckofcardsapi.com/api/deck';
+
 function checkStatusAndParse(response) {
   if (!response.ok)
     throw new Error(
@@ -23,10 +25,6 @@ function generateRandomCardStyle() {
 }
 
 class Deck extends Component {
-  static defaultProps = {
-    newDeckUrl: 'https://deckofcardsapi.com/api/deck/new/shuffle/',
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -41,8 +39,7 @@ class Deck extends Component {
   }
 
   componentDidMount() {
-    const { newDeckUrl } = this.props;
-    fetch(newDeckUrl)
+    fetch(`${API_BASE_URL}/new/shuffle/`)
       .then(checkStatusAndParse)
       .then((data) => {
         console.log(data);
@@ -55,8 +52,7 @@ class Deck extends Component {
   }
 
   generateNewDeck(e) {
-    const { newDeckUrl } = this.props;
-    fetch(newDeckUrl)
+    fetch(`${API_BASE_URL}/new/shuffle/`)
       .then(checkStatusAndParse)
       .then((data) => {
         console.log(data);
@@ -75,8 +71,8 @@ class Deck extends Component {
   drawCard(e) {
     const { isDeckEmpty } = this.state;
     if (isDeckEmpty) return;
-    const { deckID } = this.state;
-    const drawCardUrl = `https://deckofcardsapi.com/api/deck/${deckID}/draw/`;
+    const { deckID: id } = this.state;
+    const drawCardUrl = `${API_BASE_URL}/${id}/draw/`;
     fetch(drawCardUrl)
       .then(checkStatusAndParse)
       .then((data) => {
