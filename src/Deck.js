@@ -1,28 +1,9 @@
 import React, { Component } from 'react';
 import Card from './Card';
 import './Deck.css';
+import { checkStatusAndParse } from './util';
 
 const API_BASE_URL = 'https://deckofcardsapi.com/api/deck';
-
-function checkStatusAndParse(response) {
-  if (!response.ok)
-    throw new Error(
-      `Error fetching resource. Response Status Code: ${response.status}, Response: ${response}`
-    );
-
-  return response.json();
-}
-
-// function generateRandomCardStyle() {
-//   const rand = Math.random();
-//   const sign = rand > 0.5 ? '-' : '';
-//   const translateXVal = `-${50 + rand * 10}%`;
-//   const translateYVal = `${sign}${rand * 6}px`;
-//   const rotateVal = `${sign}${rand * 40}deg`;
-//   return {
-//     transform: `translate(${translateXVal}, ${translateYVal}) rotate(${rotateVal})`,
-//   };
-// }
 
 class Deck extends Component {
   static generateRandomCardStyle() {
@@ -87,7 +68,10 @@ class Deck extends Component {
       .then(checkStatusAndParse)
       .then((data) => {
         console.log(data);
-        const newCard = { ...data.cards[0], styles: generateRandomCardStyle() };
+        const newCard = {
+          ...data.cards[0],
+          styles: Deck.generateRandomCardStyle(),
+        };
         this.setState((st) => ({
           drawnCards: [...st.drawnCards, newCard],
           isDeckEmpty: !data.remaining,
