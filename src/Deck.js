@@ -36,6 +36,7 @@ class Deck extends Component {
       drawnCards: [],
     };
     this.drawCard = this.drawCard.bind(this);
+    this.generateNewDeck = this.generateNewDeck.bind(this);
   }
 
   componentDidMount() {
@@ -45,6 +46,24 @@ class Deck extends Component {
       .then((data) => {
         console.log(data);
         this.setState({ deckID: data.deck_id });
+      })
+      .catch((err) => {
+        this.setState({ hasError: true });
+        console.error(err);
+      });
+  }
+
+  generateNewDeck(e) {
+    const { newDeckUrl } = this.props;
+    fetch(newDeckUrl)
+      .then(checkStatusAndParse)
+      .then((data) => {
+        console.log(data);
+        this.setState({
+          deckID: data.deck_id,
+          drawnCards: [],
+          isDeckEmpty: false,
+        });
       })
       .catch((err) => {
         this.setState({ hasError: true });
@@ -78,7 +97,11 @@ class Deck extends Component {
     const generateNewDeckHtml = (
       <div>
         <p>No more cards!</p>
-        <button className="Deck-btn" type="button">
+        <button
+          className="Deck-btn"
+          type="button"
+          onClick={this.generateNewDeck}
+        >
           Get a new deck!
         </button>
       </div>
